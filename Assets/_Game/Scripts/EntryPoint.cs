@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Game.Scripts.Camera;
 using _Game.Scripts.Player.Movement;
 using _Game.Scripts.UI;
@@ -17,11 +18,20 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private MapUI _mapUI;
     [SerializeField] private CalendarUI _calendarUI;
     [SerializeField] private InventoryUI _inventoryUI;
+    
+    private UIManager _uiManager;
 
     private void Awake()
     {
         _cam.Construct(_input);
         _player.Construct(_input);
+        
+        _uiManager = new(_input, _overlay, _inventoryUI, _calendarUI, _mapUI);
+    }
+
+    private void OnDestroy()
+    {
+        _uiManager.Dispose();
     }
 }
 }

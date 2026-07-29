@@ -12,14 +12,14 @@ public abstract class ScreenManager: MonoBehaviour
         _screen = GetComponent<CanvasGroup>();
     }
 
-    protected virtual void Show()
+    public virtual void Show()
     {
         _screen.alpha = 1;
         _screen.blocksRaycasts = true;
         _screen.interactable = true;
     }
 
-    protected virtual void Hide()
+    public virtual void Hide()
     {
         _screen.alpha = 0;
         _screen.blocksRaycasts = false;

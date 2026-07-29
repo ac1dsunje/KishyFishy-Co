@@ -18,6 +18,10 @@ public class InputHandler: MonoBehaviour
     public event Action OnSit;
     public event Action OnJump;
 
+    public event Action OnInventory;
+    public event Action OnMap;
+    public event Action OnCalendar;
+
     private float _yaw;
     private float _pitch;
     
@@ -39,6 +43,21 @@ public class InputHandler: MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             OnSprint?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            OnMap?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            OnInventory?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnCalendar?.Invoke();
         }
         
         _yaw += Input.GetAxis("Mouse X") * _ySpeed * Time.deltaTime;
