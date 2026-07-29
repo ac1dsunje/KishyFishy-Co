@@ -13,7 +13,11 @@ public class PlayerController : MonoBehaviour
 
     private float _horizontalVelocity;
     private float _verticalVelocity;
+    
     private bool _jumpRequested;
+    
+    private bool _isRunning;
+    private bool _isSitting;
     
     private bool _isGrounded;
 
@@ -32,6 +36,9 @@ public class PlayerController : MonoBehaviour
     {
         _horizontalVelocity = Input.GetAxis("Horizontal");
         _verticalVelocity = Input.GetAxis("Vertical");
+
+        CheckSprint();
+        CheckSit();
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -39,15 +46,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void CheckSprint()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _isRunning = !_isRunning;
+        }
+    }
+
+    private void CheckSit()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            _isSitting = !_isSitting;
+        }
+    }
+
     private void FixedUpdate()
     {
         Move();
         Jump();
+        Sit();
     }
 
     private void Move()
     {
-        _rb.linearVelocity = new Vector3(_horizontalVelocity, 0f, _verticalVelocity).normalized * _config.MoveSpeed;
+        var speed = _isRunning? _config.MoveSpeed * _config.SprintK : _config.MoveSpeed;
+        speed = _isSitting ? speed * _config.SitK : speed;
+        _rb.linearVelocity = new Vector3(_horizontalVelocity, 0f, _verticalVelocity).normalized * speed;
     }
 
     private void Jump()
@@ -57,6 +83,18 @@ public class PlayerController : MonoBehaviour
         if (!_jumpRequested) return;
         _rb.AddForce(new Vector3(0, _config.JumpSpeed, 0), ForceMode.Impulse);
         _jumpRequested = false;
+    }
+
+    private void Sit()
+    {
+        if (_isSitting)
+        {
+            transform.localScale = new Vector3(1f, .5f, 1f);
+        }
+        else
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        }
     }
 
     private void CheckGround()
