@@ -8,18 +8,17 @@ namespace _Game.Scripts
 {
 public class EntryPoint : MonoBehaviour
 {
-    [SerializeField] private float _ySpeed = 90f;
-    [SerializeField] private float _xSpeed = 90f;
 
     [SerializeField] private Overlay _overlay;
+    [SerializeField] private InputHandler _input;
 
     [SerializeField] private CameraController _cam;
     [SerializeField] private PlayerMovement _player;
 
     private void Awake()
     {
-        _cam.Construct(_ySpeed, _xSpeed);
-        _player.Construct(_ySpeed);
+        _cam.Construct(_input);
+        _player.Construct(_input);
     }
 }
 }

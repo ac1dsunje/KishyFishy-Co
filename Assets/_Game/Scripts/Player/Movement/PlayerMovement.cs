@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private MovementConfig _config;
     private Rigidbody _rb;
+    private InputHandler _input;
 
     // GroundCheck
     [SerializeField] private CapsuleCollider _collider;
@@ -22,61 +23,36 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalVelocity;
     private bool _isRunning;
     private bool _isSitting;
-    
-    // Rotation
-    private float _ySpeed = 0f;
-    private float _yaw = 0f;
+
+    private float _yaw;
     
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
     }
 
-    public void Construct(float ySpeed)
+    public void Construct(InputHandler input)
     {
-        _ySpeed = ySpeed;
+        _input = input;
+
+        _input.OnHorizontal += UpdateHorizontal;
+        _input.OnVertical += UpdateVertical;
+        _input.OnYaw += UpdateYaw;
+        _input.OnJump += RequestJump;
+        _input.OnSprint += RequestSprint;
+        _input.OnSit += RequestSit;
     }
+    
+    private void UpdateYaw(float value) => _yaw = value;
+    private void UpdateHorizontal(float value) => _horizontalVelocity = value;
+    private void UpdateVertical(float value) => _verticalVelocity = value;
+    private void RequestJump() => _jumpRequested = true;
+    private void RequestSprint() => _isRunning = !_isRunning;
+    private void RequestSit() => _isSitting = !_isSitting;
 
     private void Update()
     {
-        ReadInput();
         CheckGround();
-    }
-
-    private void ReadInput()
-    {
-        _horizontalVelocity = Input.GetAxisRaw("Horizontal");
-        _verticalVelocity = Input.GetAxisRaw("Vertical");
-
-        CheckSprint();
-        CheckSit();
-        CheckJump();
-        
-        _yaw += Input.GetAxis("Mouse X") * _ySpeed * Time.deltaTime;
-    }
-
-    private void CheckJump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _jumpRequested = true;
-        }
-    }
-
-    private void CheckSprint()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _isRunning = !_isRunning;
-        }
-    }
-
-    private void CheckSit()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            _isSitting = !_isSitting;
-        }
     }
 
     private void FixedUpdate()
@@ -84,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
         Rotate();
         Move();
         Jump();
-        Sit();
+        transform.localScale = _isSitting ? new Vector3(1f, .5f, 1f) : new Vector3(1f, 1f, 1f);
         Fall();
     }
 
@@ -113,20 +89,25 @@ public class PlayerMovement : MonoBehaviour
         _rb.AddForce(gravity, ForceMode.Acceleration);
     }
 
-    private void Sit()
-    {
-        transform.localScale = _isSitting ? new Vector3(1f, .5f, 1f) : new Vector3(1f, 1f, 1f);
-    }
-
     private void CheckGround()
     {
         var distToGround = _collider.bounds.extents.y;
         _isGrounded = Physics.Raycast(transform.position, -Vector3.up, distToGround + _rayOffset, _groundMask);
     }
-
+    
     private void Rotate()
     {
         _rb.MoveRotation(Quaternion.Euler(0f, _yaw, 0f));
+    }
+
+    private void OnDestroy()
+    {
+        _input.OnHorizontal -= UpdateHorizontal;
+        _input.OnVertical -= UpdateVertical;
+        _input.OnYaw -= UpdateYaw;
+        _input.OnJump -= RequestJump;
+        _input.OnSprint -= RequestSprint;
+        _input.OnSit -= RequestSit;
     }
 }
 }
