@@ -5,11 +5,11 @@ namespace _Game.Scripts.UI
 {
 public class UIManager: IDisposable
 {
-    private InputHandler _input;
-    private Overlay _overlay;
-    private InventoryUI _inventory;
-    private CalendarUI _calendar;
-    private MapUI _map;
+    private readonly InputHandler _input;
+    private readonly Overlay _overlay;
+    private readonly InventoryUI _inventory;
+    private readonly CalendarUI _calendar;
+    private readonly MapUI _map;
 
     private readonly List<ScreenManager> _screens = new();
 
