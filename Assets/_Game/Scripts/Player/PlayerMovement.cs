@@ -2,14 +2,16 @@ using UnityEngine;
 
 namespace _Game.Scripts.Player
 {
-public class PlayerController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PlayerConfig _config;
+    [SerializeField] private MovementConfig _config;
     [SerializeField] private CapsuleCollider _collider;
     [SerializeField] private float _rayOffset = 0.05f;
     [SerializeField] private LayerMask _groundMask;
 
     private Rigidbody _rb;
+
+    private const float GlobalGravity = 9.81f;
 
     private float _horizontalVelocity;
     private float _verticalVelocity;
@@ -19,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private bool _isRunning;
     private bool _isSitting;
     
-    private bool _isGrounded;
+    [SerializeField] private bool _isGrounded;
 
     private void Awake()
     {
@@ -67,6 +69,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Jump();
         Sit();
+        Fall();
     }
 
     private void Move()
@@ -85,16 +88,17 @@ public class PlayerController : MonoBehaviour
         _jumpRequested = false;
     }
 
+    private void Fall()
+    {
+        if (_isGrounded) return;
+        
+        var gravity = Vector3.up * (-GlobalGravity * _config.GravityScale);
+        _rb.AddForce(gravity, ForceMode.Acceleration);
+    }
+
     private void Sit()
     {
-        if (_isSitting)
-        {
-            transform.localScale = new Vector3(1f, .5f, 1f);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1f, 1f, 1f);
-        }
+        transform.localScale = _isSitting ? new Vector3(1f, .5f, 1f) : new Vector3(1f, 1f, 1f);
     }
 
     private void CheckGround()

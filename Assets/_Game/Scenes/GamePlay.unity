@@ -532,6 +532,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5379189786924164217, guid: 90d4e4c1f30a6744ea62b63761f66b76, type: 3}
+      propertyPath: _gravityScale
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8061831791710181939, guid: 90d4e4c1f30a6744ea62b63761f66b76, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
