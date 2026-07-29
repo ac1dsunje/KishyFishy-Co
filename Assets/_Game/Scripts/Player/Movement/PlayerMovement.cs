@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Game.Scripts.Player
+namespace _Game.Scripts.Player.Movement
 {
 public class PlayerMovement : MonoBehaviour
 {
