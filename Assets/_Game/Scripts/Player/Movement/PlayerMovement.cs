@@ -5,24 +5,24 @@ namespace _Game.Scripts.Player.Movement
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private MovementConfig _config;
+    private Rigidbody _rb;
+
+    // GroundCheck
     [SerializeField] private CapsuleCollider _collider;
     [SerializeField] private float _rayOffset = 0.05f;
     [SerializeField] private LayerMask _groundMask;
-
-    private Rigidbody _rb;
-
+    private bool _isGrounded;
+    
+    // Jumping
+    private bool _jumpRequested;
     private const float GlobalGravity = 9.81f;
-
+    
+    // Moving
     private float _horizontalVelocity;
     private float _verticalVelocity;
-    
-    private bool _jumpRequested;
-    
     private bool _isRunning;
     private bool _isSitting;
     
-    [SerializeField] private bool _isGrounded;
-
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -36,8 +36,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void ReadInput()
     {
-        _horizontalVelocity = Input.GetAxis("Horizontal");
-        _verticalVelocity = Input.GetAxis("Vertical");
+        _horizontalVelocity = Input.GetAxisRaw("Horizontal");
+        _verticalVelocity = Input.GetAxisRaw("Vertical");
 
         CheckSprint();
         CheckSit();
