@@ -41,7 +41,11 @@ public class PlayerMovement : MonoBehaviour
 
         CheckSprint();
         CheckSit();
-        
+        CheckJump();
+    }
+
+    private void CheckJump()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _jumpRequested = true;
