@@ -23,9 +23,18 @@ public class PlayerMovement : MonoBehaviour
     private bool _isRunning;
     private bool _isSitting;
     
+    // Rotation
+    private float _ySpeed = 0f;
+    private float _yaw = 0f;
+    
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+    }
+
+    public void Construct(float ySpeed)
+    {
+        _ySpeed = ySpeed;
     }
 
     private void Update()
@@ -42,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
         CheckSprint();
         CheckSit();
         CheckJump();
+        
+        _yaw += Input.GetAxis("Mouse X") * _ySpeed * Time.deltaTime;
     }
 
     private void CheckJump()
@@ -70,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Rotate();
         Move();
         Jump();
         Sit();
@@ -80,7 +92,8 @@ public class PlayerMovement : MonoBehaviour
     {
         var speed = _isRunning? _config.MoveSpeed * _config.SprintK : _config.MoveSpeed;
         speed = _isSitting ? speed * _config.SitK : speed;
-        _rb.linearVelocity = new Vector3(_horizontalVelocity, 0f, _verticalVelocity).normalized * speed;
+        var direction = Quaternion.Euler(0f, _yaw, 0f) * new Vector3(_horizontalVelocity, 0f, _verticalVelocity);
+        _rb.linearVelocity = direction * speed;
     }
 
     private void Jump()
@@ -109,6 +122,11 @@ public class PlayerMovement : MonoBehaviour
     {
         var distToGround = _collider.bounds.extents.y;
         _isGrounded = Physics.Raycast(transform.position, -Vector3.up, distToGround + _rayOffset, _groundMask);
+    }
+
+    private void Rotate()
+    {
+        _rb.MoveRotation(Quaternion.Euler(0f, _yaw, 0f));
     }
 }
 }
