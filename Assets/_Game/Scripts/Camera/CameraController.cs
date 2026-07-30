@@ -11,7 +11,13 @@ public class CameraController: MonoBehaviour
     private float _yaw = 0f;
     private float _pitch = 0f;
     
-    private void Awake() => _cam = GetComponent<CameraController>();
+    private void Awake()
+    {
+        _cam = GetComponent<CameraController>();
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     public void Construct(InputHandler input)
     {
