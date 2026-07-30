@@ -1,12 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
-namespace _Game.Scripts
+namespace _Game.Scripts.InputManager
 {
 public class InputHandler: MonoBehaviour
 {
     [SerializeField] private float _ySpeed = 90f;
     [SerializeField] private float _xSpeed = 90f;
+    [SerializeField] private InputConfig _config;
     
     public event Action<float> OnHorizontal;
     public event Action<float> OnVertical;
@@ -30,35 +31,17 @@ public class InputHandler: MonoBehaviour
         OnHorizontal?.Invoke(Input.GetAxisRaw("Horizontal"));
         OnVertical?.Invoke(Input.GetAxisRaw("Vertical"));
         
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnJump?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Jump)) OnJump?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            OnSit?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Sit)) OnSit?.Invoke();
         
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            OnSprint?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Sprint)) OnSprint?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            OnMap?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Map)) OnMap?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            OnInventory?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Inventory)) OnInventory?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            OnCalendar?.Invoke();
-        }
+        if (Input.GetKeyDown(_config.Calendar)) OnCalendar?.Invoke();
         
         _yaw += Input.GetAxis("Mouse X") * _ySpeed * Time.deltaTime;
         OnYaw?.Invoke(_yaw);

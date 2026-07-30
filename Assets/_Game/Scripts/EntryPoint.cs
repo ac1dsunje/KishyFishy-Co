@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Game.Scripts.Camera;
+using _Game.Scripts.InputManager;
 using _Game.Scripts.Player.Movement;
 using _Game.Scripts.UI;
 using UnityEngine;

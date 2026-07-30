@@ -1,3 +1,4 @@
+using _Game.Scripts.InputManager;
 using UnityEngine;
 
 namespace _Game.Scripts.Player.Movement

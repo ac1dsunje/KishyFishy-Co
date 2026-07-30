@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Game.Scripts.InputManager;
+using UnityEngine;
 
 namespace _Game.Scripts.Camera
 {
