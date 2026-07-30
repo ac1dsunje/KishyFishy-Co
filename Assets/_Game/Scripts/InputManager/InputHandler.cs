@@ -5,8 +5,6 @@ namespace _Game.Scripts.InputManager
 {
 public class InputHandler: MonoBehaviour
 {
-    [SerializeField] private float _ySpeed = 90f;
-    [SerializeField] private float _xSpeed = 90f;
     [SerializeField] private InputConfig _config;
     
     public event Action<float> OnHorizontal;
@@ -43,9 +41,9 @@ public class InputHandler: MonoBehaviour
 
         if (Input.GetKeyDown(_config.Calendar)) OnCalendar?.Invoke();
         
-        _yaw += Input.GetAxis("Mouse X") * _ySpeed * Time.deltaTime;
+        _yaw += Input.GetAxis("Mouse X") * _config.YSpeed * Time.deltaTime;
         OnYaw?.Invoke(_yaw);
-        _pitch -= Input.GetAxis("Mouse Y") * _xSpeed * Time.deltaTime;
+        _pitch -= Input.GetAxis("Mouse Y") * _config.XSpeed * Time.deltaTime;
         OnPitch?.Invoke(_pitch);
     }
 }
