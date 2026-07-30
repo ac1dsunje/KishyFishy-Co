@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _Game.Scripts.UI
 {
@@ -31,30 +32,33 @@ public class UIManager: IDisposable
         _input.OnMap += ShowMap;
     }
 
-    private void CloseAll()
+    private void CloseAll(ScreenManager current)
     {
-        foreach (var screen in _screens)
+        foreach (var screen in _screens.Where(screen => screen != current))
         {
             screen.Hide();
         }
     }
 
-    private void ShowInventory()
+    private void ShowScreen(ScreenManager screen)
     {
-        CloseAll();
-        _inventory.Show();
+        CloseAll(screen);
+        screen.Toggle();
+        CheckOverlay(screen);
     }
 
-    private void ShowCalendar()
-    {
-        CloseAll();
-        _calendar.Show();
-    }
+    private void ShowInventory() => ShowScreen(_inventory);
 
-    private void ShowMap()
+    private void ShowCalendar() => ShowScreen(_calendar);
+
+    private void ShowMap() => ShowScreen(_map);
+
+    private void CheckOverlay(ScreenManager screen)
     {
-        CloseAll();
-        _map.Show();
+        if (!screen.IsOpened)
+        {
+            _overlay.Show();
+        }
     }
 
     public void Dispose()
